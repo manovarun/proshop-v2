@@ -2,6 +2,7 @@ const AppError = require('../utils/AppError');
 
 const GlobalErrorHandler = (err, req, res, next) => {
   let error = { ...err };
+  console.log(error);
   error.statusCode = err.statusCode || 500;
   error.status = err.status || 'error';
   error.name = err.name;

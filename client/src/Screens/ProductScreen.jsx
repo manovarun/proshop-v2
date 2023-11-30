@@ -1,5 +1,6 @@
-import React from 'react';
-import products from '../products';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+// import products from '../products';
 import { Link, useParams } from 'react-router-dom';
 import { Button, Card, Col, Image, ListGroup, Row } from 'react-bootstrap';
 import Rating from '../components/Rating';
@@ -7,7 +8,20 @@ import Rating from '../components/Rating';
 const ProductScreen = () => {
   const { id: productId } = useParams();
 
-  const product = products.find((product) => product._id === productId);
+  const [product, setProduct] = useState({});
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const { data } = await axios.get(`/api/products/${productId}`);
+      setProduct(data);
+    };
+
+    fetchProduct();
+
+    //eslint-disable-next-line
+  }, [productId]);
+
+  // const product = products.find((product) => product._id === productId);
 
   return (
     <>
