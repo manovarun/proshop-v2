@@ -1,9 +1,13 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const { createUser } = require('../controllers/UserController');
+const { protect, isAdminUser } = require('../middlewares/Auth');
+const { register, login } = require('../controllers/AuthController');
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+const router = express.Router();
+
+router.route('/register').post(register);
+router.route('/login').post(login);
+
+router.route('/').post(protect, isAdminUser, createUser);
 
 module.exports = router;
