@@ -1,6 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Button, Card, Col, Image, ListGroup, Row } from 'react-bootstrap';
+import {
+  Button,
+  Card,
+  Col,
+  Image,
+  ListGroup,
+  Row,
+  Form,
+} from 'react-bootstrap';
 import Rating from '../components/Rating';
 import { useGetProductDetailsQuery } from '../slices/productsApiSlice';
 import Loader from '../components/Loader';
@@ -10,6 +18,10 @@ const ProductScreen = () => {
   const { id: productId } = useParams();
 
   const { data, isLoading, error } = useGetProductDetailsQuery(productId);
+
+  const [qty, setQty] = useState(1);
+
+  const AddToCartHandler = () => {};
 
   return (
     <>
@@ -67,11 +79,33 @@ const ProductScreen = () => {
                     </Col>
                   </Row>
                 </ListGroup.Item>
+                {data.product.countInStock > 0 && (
+                  <ListGroup.Item>
+                    <Row>
+                      <Col>Qty</Col>
+                      <Col>
+                        <Form.Select
+                          value={qty}
+                          onChange={(e) => setQty(Number(e.target.value))}
+                        >
+                          {[...Array(data.product.countInStock).keys()].map(
+                            (x) => (
+                              <option key={x + 1} value={x + 1}>
+                                {x + 1}
+                              </option>
+                            )
+                          )}
+                        </Form.Select>
+                      </Col>
+                    </Row>
+                  </ListGroup.Item>
+                )}
                 <ListGroup.Item>
                   <Button
                     className="btn btn-block"
                     type="button"
                     disabled={data.product.countInStock === 0}
+                    onClick={AddToCartHandler}
                   >
                     Add to Cart
                   </Button>
