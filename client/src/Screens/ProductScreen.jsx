@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import {
   Button,
   Card,
@@ -9,6 +10,7 @@ import {
   Row,
   Form,
 } from 'react-bootstrap';
+import { addToCart } from '../slices/cartSlice';
 import Rating from '../components/Rating';
 import { useGetProductDetailsQuery } from '../slices/productsApiSlice';
 import Loader from '../components/Loader';
@@ -17,11 +19,17 @@ import Message from '../components/Message';
 const ProductScreen = () => {
   const { id: productId } = useParams();
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const { data, isLoading, error } = useGetProductDetailsQuery(productId);
 
   const [qty, setQty] = useState(1);
 
-  const AddToCartHandler = () => {};
+  const AddToCartHandler = () => {
+    dispatch(addToCart({ ...data.product, qty }));
+    navigate('/cart');
+  };
 
   return (
     <>
