@@ -6,6 +6,8 @@ const AppError = require('../utils/AppError');
 exports.getProducts = asyncHandler(async (req, res, next) => {
   const products = await Product.find();
 
+  console.log(products);
+
   if (!products) {
     return next(new AppError('Products not found', 404));
   }
