@@ -33,7 +33,6 @@ exports.login = asyncHandler(async (req, res, next) => {
   if (!email || !password) {
     return next(new AppError('Please provide a valid email and password'));
   }
-
   const user = await User.findOne({ email });
   if (!user) return next(new AppError('User not found, please try again', 400));
 
@@ -45,3 +44,5 @@ exports.login = asyncHandler(async (req, res, next) => {
 
   return res.status(200).json({ status: 'success', user, token });
 });
+
+exports.logout = asyncHandler(async (req, res, next) => {});
