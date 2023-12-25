@@ -28,9 +28,32 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
 
 exports.getUserById = asyncHandler(async (req, res, next) => {});
 
-exports.getUserProfile = asyncHandler(async (req, res, next) => {});
+exports.getUserProfile = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
 
-exports.updateUserProfile = asyncHandler(async (req, res, next) => {});
+  if (!user) return next(new AppError('User not found', 404));
+
+  return res.status(200).json({ status: 'success', user });
+});
+
+exports.updateUserProfile = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+  if (!user) return next(new AppError('User not found', 404));
+
+  user.name = req.body.name || user.name;
+  user.email = req.body.email || user.email;
+
+  if (req.body.password) {
+    user.password = req.body.password;
+  }
+
+  const updatedUser = await user.save();
+
+  if (!updatedUser)
+    return next(new AppError('Unable to save user, please try again', 404));
+
+  res.status(200).json({ status: 'success', user: updatedUser });
+});
 
 exports.updateUser = asyncHandler(async (req, res, next) => {});
 
