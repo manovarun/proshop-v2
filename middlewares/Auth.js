@@ -6,19 +6,21 @@ const User = require('../models/User');
 
 exports.protect = asyncHandler(async (req, res, next) => {
   let token;
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith('Bearer ')
-  ) {
-    token = req.headers.authorization.split(' ')[1];
-  }
+  // if (
+  //   req.headers.authorization &&
+  //   req.headers.authorization.startsWith('Bearer ')
+  // ) {
+  //   token = req.headers.authorization.split(' ')[1];
+  // }
+
+  token = req.cookies.jwt;
 
   if (!token)
     return next(new AppError('User not authorized, token failed', 401));
 
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
-  const user = await User.findById(decoded.id);
+  const user = await User.findById(decoded.id).select('-password');
 
   if (!user) {
     return next(
