@@ -58,4 +58,11 @@ exports.login = asyncHandler(async (req, res, next) => {
   return createSendToken(user, 200, res);
 });
 
-exports.logout = asyncHandler(async (req, res, next) => {});
+exports.logout = asyncHandler(async (req, res, next) => {
+  res.cookie('jwt', '', {
+    httpOnly: true,
+    expires: new Date(0),
+  });
+
+  res.status(200).json({ message: 'Logged Out Successfully' });
+});

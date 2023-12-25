@@ -16,7 +16,9 @@ exports.protect = asyncHandler(async (req, res, next) => {
   token = req.cookies.jwt;
 
   if (!token)
-    return next(new AppError('User not authorized, token failed', 401));
+    return next(
+      new AppError('User not authorized, token failed, please login', 401)
+    );
 
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
