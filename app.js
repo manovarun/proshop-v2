@@ -8,6 +8,7 @@ const connectDB = require('./db');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const productRouter = require('./routes/products');
+const orderRouter = require('./routes/orders');
 const GlobalErrorHandler = require('./controllers/ErrorController');
 
 connectDB();
@@ -27,6 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/products', productRouter);
+app.use('/api/orders', orderRouter);
 
 app.use(GlobalErrorHandler);
 
