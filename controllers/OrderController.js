@@ -30,7 +30,9 @@ exports.createOrder = asyncHandler(async (req, res, next) => {
     totalPrice,
   });
 
-  order = await Order.save();
+  console.log(order);
+
+  order = await order.save();
 
   res.status(201).json({ status: 'success', order });
 });
