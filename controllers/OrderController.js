@@ -10,6 +10,7 @@ exports.createOrder = asyncHandler(async (req, res, next) => {
     shippingAddress,
     paymentMethod,
     paymentResult,
+    itemsPrice,
     taxPrice,
     shippingPrice,
     totalPrice,
@@ -25,12 +26,11 @@ exports.createOrder = asyncHandler(async (req, res, next) => {
     shippingAddress,
     paymentMethod,
     paymentResult,
+    itemsPrice,
     taxPrice,
     shippingPrice,
     totalPrice,
   });
-
-  console.log(order);
 
   order = await order.save();
 
