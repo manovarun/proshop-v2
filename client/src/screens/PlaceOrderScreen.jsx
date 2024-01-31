@@ -12,7 +12,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import CheckOutSteps from '../components/CheckOutSteps';
 import { useEffect } from 'react';
-import FormContainer from '../components/FormContainer';
 import { toast } from 'react-toastify';
 import Message from '../components/Message';
 import Loader from '../components/Loader';

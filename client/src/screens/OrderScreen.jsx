@@ -9,14 +9,33 @@ import {
   Button,
   Card,
 } from 'react-bootstrap';
-import { useGetOrderDetailsQuery } from '../slices/orderApiSlice';
+import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
+import { toast } from 'react-toastify';
+import {
+  useGetOrderDetailsQuery,
+  usePayOrderMutation,
+  useGetPayPalClientIdQuery,
+} from '../slices/orderApiSlice';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
+import { useSelector } from 'react-redux';
 
 const OrderScreen = () => {
   const { id: orderId } = useParams();
 
   const { data, refetch, isLoading, error } = useGetOrderDetailsQuery(orderId);
+
+  const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
+
+  const [{ isPending }, payPalDispatch] = usePayPalScriptReducer();
+
+  const {
+    data: paypal,
+    isLoading: loadingPayPal,
+    error: errorPay,
+  } = useGetPayPalClientIdQuery();
+
+  const { userInfo } = useSelector(({ auth }) => auth);
 
   const order = data?.order;
 
