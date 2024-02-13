@@ -95,3 +95,14 @@ exports.updateOrderToDelivered = asyncHandler(async (req, res, next) => {
 
   res.status('200').json({ status: 'success', order });
 });
+
+//Admin
+exports.getOrders = asyncHandler(async (req, res, next) => {
+  let orders = await Order.find({}).populate('user', 'id name');
+
+  if (!orders) {
+    return next(new AppError('Orders not found', 404));
+  }
+
+  res.status(200).json({ status: 'Success', orders });
+});
