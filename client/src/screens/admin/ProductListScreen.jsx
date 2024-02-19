@@ -4,12 +4,13 @@ import { LinkContainer } from 'react-router-bootstrap';
 import Loader from '../../components/Loader';
 import Message from '../../components/Message';
 import { toast } from 'react-toastify';
-import { FaTimes, FaTrash, FaEdit } from 'react-icons/fa';
+import { FaTrash, FaEdit } from 'react-icons/fa';
 import {
   useCreateProductMutation,
   useGetProductsQuery,
 } from '../../slices/productsApiSlice';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 const ProductListScreen = () => {
   const { data, refetch, isLoading, error } = useGetProductsQuery();
@@ -85,7 +86,9 @@ const ProductListScreen = () => {
               {products &&
                 products.map((product) => (
                   <tr key={product._id}>
-                    <td>{product._id}</td>
+                    <td>
+                      <Link to={`/product/${product._id}`}>{product._id}</Link>
+                    </td>
                     <td>{product.name}</td>
                     <td>{product.price}</td>
                     <td>{product.category}</td>

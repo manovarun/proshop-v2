@@ -34,3 +34,26 @@ exports.createProduct = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({ status: 'Success', product: product });
 });
+
+exports.updateProduct = asyncHandler(async (req, res, next) => {
+  const { name, price, description, image, brand, category, countInStock } =
+    req.body;
+
+  let product = await Product.findById(req.params.id);
+
+  if (!product) {
+    return next(new AppError('Product not found', 404));
+  }
+
+  product.name = name || product.name;
+  product.price = price || product.price;
+  product.description = description || product.description;
+  product.image = image || product.image;
+  product.brand = brand || product.brand;
+  product.category = category || product.category;
+  product.countInStock = countInStock || product.countInStock;
+
+  product = await product.save();
+
+  res.status(200).json({ status: 'Success', product });
+});

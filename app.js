@@ -9,6 +9,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const productRouter = require('./routes/products');
 const orderRouter = require('./routes/orders');
+const uploadRouter = require('./routes/uploads');
 const GlobalErrorHandler = require('./controllers/ErrorController');
 
 connectDB();
@@ -29,6 +30,9 @@ app.use('/', indexRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/products', productRouter);
 app.use('/api/orders', orderRouter);
+app.use('/api/upload', uploadRouter);
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.get('/api/config/paypal', (req, res) =>
   res.send({ clientId: process.env.PAYPAL_CLIENT_ID })
