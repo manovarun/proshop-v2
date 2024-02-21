@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { FaTrash, FaEdit } from 'react-icons/fa';
 import {
   useCreateProductMutation,
+  useDeleteProductMutation,
   useGetProductsQuery,
 } from '../../slices/productsApiSlice';
 import { useSelector } from 'react-redux';
@@ -19,6 +20,9 @@ const ProductListScreen = () => {
 
   const [createProduct, { isLoading: loadingCreate }] =
     useCreateProductMutation();
+
+  const [deleteProduct, { isLoading: loadingDelete }] =
+    useDeleteProductMutation();
 
   const { userInfo } = useSelector(({ auth }) => auth);
 
@@ -46,8 +50,16 @@ const ProductListScreen = () => {
     }
   };
 
-  const deleteHandler = (id) => {
-    console.log(id);
+  const deleteHandler = async (id) => {
+    if (window.confirm('Are you sure you want to delete')) {
+      try {
+        await deleteProduct(id).unwrap();
+        refetch();
+        toast.success('Product deleted successfully');
+      } catch (error) {
+        toast.error(error?.data?.message || error.error);
+      }
+    }
   };
 
   return (
