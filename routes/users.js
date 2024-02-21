@@ -6,6 +6,7 @@ const {
   updateUserProfile,
   getUserById,
   deleteUser,
+  updateUser,
 } = require('../controllers/UserController');
 const { protect, isAdminUser } = require('../middlewares/Auth');
 const { register, login, logout } = require('../controllers/AuthController');
@@ -26,6 +27,7 @@ router
 router
   .route('/:id')
   .get(protect, isAdminUser, getUserById)
+  .patch(protect, isAdminUser, updateUser)
   .delete(protect, isAdminUser, deleteUser);
 
 module.exports = router;

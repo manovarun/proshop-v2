@@ -70,6 +70,8 @@ exports.updateUserProfile = asyncHandler(async (req, res, next) => {
 exports.updateUser = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.params.id);
 
+  console.log('req.body', req.body);
+
   if (!user) return next(new AppError('User not found', 404));
 
   user.name = req.body.name || user.name;
@@ -81,7 +83,9 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
   if (!updatedUser)
     return next(new AppError('Unable to save user, please try again', 404));
 
-  res.status(200).json({ status: 'success', user: updatedUser });
+  res
+    .status(200)
+    .json({ status: 'User updated successfully', user: updatedUser });
 });
 
 exports.deleteUser = asyncHandler(async (req, res, next) => {
