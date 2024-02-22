@@ -6,6 +6,7 @@ const {
   createProduct,
   updateProduct,
   deleteProduct,
+  createProductReview,
 } = require('../controllers/ProductController');
 const { protect, isAdminUser } = require('../middlewares/Auth');
 
@@ -18,5 +19,7 @@ router
   .get(getProduct)
   .put(protect, isAdminUser, updateProduct)
   .delete(protect, isAdminUser, deleteProduct);
+
+router.route('/:id/reviews').post(protect, createProductReview);
 
 module.exports = router;

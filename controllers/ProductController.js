@@ -67,3 +67,40 @@ exports.deleteProduct = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({ status: 'Success' });
 });
+
+exports.createProductReview = asyncHandler(async (req, res, next) => {
+  const { rating, comment } = req.body;
+
+  const product = await Product.findById(req.params.id);
+
+  if (!product) {
+    return next(new AppError('Product not found', 404));
+  }
+
+  const alreadyReviewed = product.find(
+    (review) => review.user.toString() === req.user._id
+  );
+
+  if (alreadyReviewed) {
+    return next(new AppError('Product already reviewed', 404));
+  }
+
+  const review = {
+    user: req.user._id,
+    name: req.user.name,
+    rating,
+    comment,
+  };
+
+  product.reviews.push(review);
+
+  product.numReviews = product.reviews.length;
+
+  product.rating =
+    product.reviews.reduce((acc, review) => acc + review.rating, 0) /
+    product.reviews.length;
+
+  await product.save();
+  ``;
+  res.status(200).json({ status: 'Review added successfully', product });
+});
