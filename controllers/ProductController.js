@@ -4,15 +4,28 @@ const Product = require('../models/Product');
 const AppError = require('../utils/AppError');
 
 exports.getProducts = asyncHandler(async (req, res, next) => {
-  const products = await Product.find();
+  const pageSize = 1;
+  const page = Number(req.query.pageNumber) || 1;
+  const keyword = req.query.keyword
+    ? { name: { $regex: req.query.keyword, $options: 'i' } }
+    : {};
+  const count = await Product.countDocuments({ ...keyword });
+
+  const products = await Product.find({ ...keyword })
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
 
   if (!products) {
     return next(new AppError('Products not found', 404));
   }
 
-  return res
-    .status(200)
-    .json({ status: 'Success', products, results: products.length });
+  return res.status(200).json({
+    status: 'Success',
+    products,
+    page,
+    pages: Math.ceil(count / pageSize),
+    results: products.length,
+  });
 });
 
 exports.getProduct = asyncHandler(async (req, res, next) => {
@@ -77,9 +90,10 @@ exports.createProductReview = asyncHandler(async (req, res, next) => {
     return next(new AppError('Product not found', 404));
   }
 
-  const alreadyReviewed = product.find(
-    (review) => review.user.toString() === req.user._id
-  );
+  const alreadyReviewed = product.reviews.find((review) => {
+    console.log(review.user.toString());
+    return review.user.toString() === req.user._id.toString();
+  });
 
   if (alreadyReviewed) {
     return next(new AppError('Product already reviewed', 404));
@@ -101,6 +115,6 @@ exports.createProductReview = asyncHandler(async (req, res, next) => {
     product.reviews.length;
 
   await product.save();
-  ``;
+
   res.status(200).json({ status: 'Review added successfully', product });
 });

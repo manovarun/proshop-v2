@@ -11,10 +11,16 @@ import {
   useGetProductsQuery,
 } from '../../slices/productsApiSlice';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import Paginate from '../../components/Paginate';
 
 const ProductListScreen = () => {
-  const { data, refetch, isLoading, error } = useGetProductsQuery();
+  const { pageNumber, keyword } = useParams();
+
+  const { data, refetch, isLoading, error } = useGetProductsQuery({
+    pageNumber,
+    keyword,
+  });
 
   const products = data?.products;
 
@@ -123,6 +129,12 @@ const ProductListScreen = () => {
                 ))}
             </tbody>
           </Table>
+          <Paginate
+            pages={data.pages}
+            page={data.page}
+            isAdmin={true}
+            keyword={keyword ? keyword : ''}
+          />
         </>
       )}
     </>
