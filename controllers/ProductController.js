@@ -4,7 +4,7 @@ const Product = require('../models/Product');
 const AppError = require('../utils/AppError');
 
 exports.getProducts = asyncHandler(async (req, res, next) => {
-  const pageSize = 1;
+  const pageSize = 4;
   const page = Number(req.query.pageNumber) || 1;
   const keyword = req.query.keyword
     ? { name: { $regex: req.query.keyword, $options: 'i' } }
@@ -26,6 +26,15 @@ exports.getProducts = asyncHandler(async (req, res, next) => {
     pages: Math.ceil(count / pageSize),
     results: products.length,
   });
+});
+
+exports.getTopProducts = asyncHandler(async (req, res, next) => {
+  const products = await Product.find({}).sort({ rating: -1 }).limit(3);
+
+  if (!products) {
+    return next(new AppError('Products not found', 404));
+  }
+  return res.status(200).json({ status: 'Success', products });
 });
 
 exports.getProduct = asyncHandler(async (req, res, next) => {
