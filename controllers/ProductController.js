@@ -4,7 +4,7 @@ const Product = require('../models/Product');
 const AppError = require('../utils/AppError');
 
 exports.getProducts = asyncHandler(async (req, res, next) => {
-  const pageSize = 4;
+  const pageSize = process.env.PAGINATION_LIMIT;
   const page = Number(req.query.pageNumber) || 1;
   const keyword = req.query.keyword
     ? { name: { $regex: req.query.keyword, $options: 'i' } }
