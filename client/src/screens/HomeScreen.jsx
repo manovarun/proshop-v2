@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Row, Col } from 'react-bootstrap';
 import Product from '../components/Product';
 import { useGetProductsQuery } from '../slices/productsApiSlice';
@@ -6,6 +6,8 @@ import Loader from '../components/Loader';
 import Message from '../components/Message';
 import { Link, useParams } from 'react-router-dom';
 import Paginate from '../components/Paginate';
+import ProductCarousel from '../components/ProductCarousel';
+import Meta from '../components/Meta';
 
 const HomeScreen = () => {
   const { pageNumber, keyword } = useParams();
@@ -17,7 +19,9 @@ const HomeScreen = () => {
 
   return (
     <>
-      {keyword && (
+      {!keyword ? (
+        <ProductCarousel />
+      ) : (
         <Link to="/" className="btn btn-light">
           Go Back
         </Link>
@@ -28,6 +32,7 @@ const HomeScreen = () => {
         <Message variant="danger">{error?.data.message || error.error}</Message>
       ) : (
         <>
+          <Meta />
           <h1>Latest Products</h1>
           <Row>
             {data.products.map((product) => (
